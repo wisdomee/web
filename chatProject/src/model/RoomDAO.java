@@ -12,20 +12,31 @@ public class RoomDAO {
 	private static HashMap<String, RoomBean> roomMap;
 	private static HashMap<String, ArrayList<ChatBean>> chatMap;
 	private static HashMap<String, String> lastChatIdMap;
-	
+
 	static {
 		roomList = new ArrayList<RoomBean>();
 		roomMap = new HashMap<String, RoomBean>();
 		chatMap = new HashMap<String, ArrayList<ChatBean>>();
 		lastChatIdMap = new HashMap<String, String>();
 	}
-	
+
 	public static ArrayList<RoomBean> getAllRooms() {
 		return roomList;
 	}
+
 	public static RoomBean getRoom(String roomId) {
 		return roomMap.get(roomId);
 	}
+
+	public static ArrayList<ArrayList<UserBean>> getUserList(int allRoomSize) {
+		ArrayList<ArrayList<UserBean>> all=new ArrayList<ArrayList<UserBean>>();
+		ArrayList<RoomBean> allRooms=getAllRooms();
+		for(int i=0; i<allRoomSize; i++) {
+			all.add(allRooms.get(i).getUserList());
+		}
+		return all;
+	}
+
 	public static String openRoom() {
 		RoomBean newRoom = new RoomBean();
 		String newRoomId = newRoom.getRoomId();
@@ -35,6 +46,7 @@ public class RoomDAO {
 		lastChatIdMap.put(newRoomId, "0");
 		return newRoomId;
 	}
+
 	public static boolean enterRoom(String roomId, UserBean user) {
 		RoomBean room = roomMap.get(roomId);
 		boolean ret = false;
@@ -43,13 +55,14 @@ public class RoomDAO {
 				ArrayList<UserBean> userList = room.getUserList();
 				if (userList.size() < 7) {
 					userList.add(user);
-					room.setUserNum(room.getUserNum()+1);
+					room.setUserNum(room.getUserNum() + 1);
 					ret = true;
 				}
 			}
 		}
 		return ret;
 	}
+
 	public static boolean leaveRoom(String roomId, String userId) {
 		RoomBean room = roomMap.get(roomId);
 		boolean ret = false;
@@ -61,7 +74,7 @@ public class RoomDAO {
 					UserBean user = userList.get(idx);
 					if (user.getId().equals(userId)) {
 						userList.remove(idx);
-						room.setUserNum(room.getUserNum()-1);
+						room.setUserNum(room.getUserNum() - 1);
 						ret = true;
 					}
 				}
@@ -69,6 +82,7 @@ public class RoomDAO {
 		}
 		return ret;
 	}
+
 	public static boolean closeRoom(String roomId) {
 		if (roomMap.containsKey(roomId)) {
 			int size = roomList.size();
@@ -85,6 +99,7 @@ public class RoomDAO {
 		}
 		return false;
 	}
+
 	public static ArrayList<ChatBean> getRecentChats(String roomId, String lastChatId) {
 		if (chatMap.containsKey(roomId)) {
 			ArrayList<ChatBean> chatList = chatMap.get(roomId);
@@ -98,6 +113,7 @@ public class RoomDAO {
 		}
 		return null;
 	}
+
 	public static boolean enrollChat(String roomId, String userNick, String msg) {
 		if (chatMap.containsKey(roomId)) {
 			ArrayList<ChatBean> chatList = chatMap.get(roomId);
@@ -117,7 +133,8 @@ public class RoomDAO {
 		}
 		return false;
 	}
-	public static String getLastChatId(String roomId) {		
+
+	public static String getLastChatId(String roomId) {
 		return lastChatIdMap.get(roomId);
 	}
 }

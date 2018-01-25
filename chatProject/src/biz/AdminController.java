@@ -43,7 +43,7 @@ public class AdminController extends HttpServlet {
 	public void userList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		try {
-			request.setAttribute("userList", RoomDAO.getAllRooms());
+			request.setAttribute("userList",RoomDAO.getUserList(RoomDAO.getAllRooms().size()) );
 			request.getRequestDispatcher("userList.jsp").forward(request, response);
 		} catch (Exception s) {
 			System.out.println("chatRoom Exception");
@@ -55,7 +55,7 @@ public class AdminController extends HttpServlet {
 	public void chatRoom(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		try {
-			request.setAttribute("charRoom", RoomDAO.getAllRooms());
+			request.setAttribute("chatRoom", RoomDAO.getAllRooms());
 			request.getRequestDispatcher("chatRoom.jsp").forward(request, response);
 		} catch (Exception s) {
 			System.out.println("chatRoom Exception");
